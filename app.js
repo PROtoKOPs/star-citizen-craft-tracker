@@ -6336,12 +6336,14 @@
     return node;
   }
 
-  function showUpdateBanner(info) {
+  function showUpdateBanner(info, force = false) {
     const version = String(info && info.version != null ? info.version : '').trim();
     if (!version) return;
-    let dismissed = '';
-    try { dismissed = localStorage.getItem(UPDATE_DISMISS_KEY) || ''; } catch (error) { /* storage unavailable */ }
-    if (dismissed === version) return;
+    if (!force) {
+      let dismissed = '';
+      try { dismissed = localStorage.getItem(UPDATE_DISMISS_KEY) || ''; } catch (error) { /* storage unavailable */ }
+      if (dismissed === version) return;
+    }
     const node = updateBannerNode();
     const url = typeof info.url === 'string' ? info.url : UPDATE_MANIFEST_URL.replace('/version.json', '');
     const title = typeof info.name === 'string' && info.name ? info.name : `Версия ${version}`;
@@ -6382,7 +6384,7 @@
       const data = await response.json();
       const remote = Number(data && data.version);
       if (!Number.isFinite(remote)) throw new Error('bad manifest');
-      if (remote > Number(APP_VERSION)) showUpdateBanner(data);
+      if (remote > Number(APP_VERSION)) showUpdateBanner(data, manual);
       else if (manual) toast(`У вас последняя версия (v${APP_VERSION}).`, 'success');
     } catch (error) {
       if (error?.name === 'AbortError') {
