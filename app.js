@@ -175,7 +175,8 @@
   const UI_KEY = 'wikeloTracker.ui.v1';
   const APP_ID = 'wikelo-tracker';
   const APP_VERSION = 3;
-  const UPDATE_MANIFEST_URL = 'https://raw.githubusercontent.com/PROtoKOPs/craft-tracker/main/version.json';
+  const UPDATE_MANIFEST_URL = 'https://raw.githubusercontent.com/PROtoKOPs/star-citizen-craft-tracker/main/version.json';
+  const UPDATE_RELEASE_URL = 'https://github.com/PROtoKOPs/star-citizen-craft-tracker/releases/latest';
   const UPDATE_DISMISS_KEY = 'wikeloTracker.updateDismissed.v1';
   const TOTAL_CONTRACTS = CONTRACTS.length;
 
@@ -5535,7 +5536,7 @@
     const meta = DATA.meta || {};
     openModal({
       kicker: 'О приложении',
-      title: 'Wikelo Tracker',
+      title: 'Star Citizen Craft Tracker',
       wide: true,
       body: `
         <p>Локальный трекер ресурсов для контрактов Викело и фабрикатора в Star Citizen. Помогает понять, что уже найдено, чего не хватает, что лежит на личном складе и какие контракты готовы к сдаче.</p>
@@ -6345,7 +6346,7 @@
       if (dismissed === version) return;
     }
     const node = updateBannerNode();
-    const url = typeof info.url === 'string' ? info.url : UPDATE_MANIFEST_URL.replace('/version.json', '');
+    const url = typeof info.url === 'string' && info.url ? info.url : UPDATE_RELEASE_URL;
     const title = typeof info.name === 'string' && info.name ? info.name : `Версия ${version}`;
     const notes = typeof info.notes === 'string' && info.notes ? `<span class="update-banner-notes">${esc(info.notes)}</span>` : '';
     node.innerHTML = `
