@@ -2873,3 +2873,38 @@ button.inv-qty-cell .icon { position: absolute; right: 7px; bottom: 7px; width: 
   .contract-usage-thumb { width: 32px; height: 32px; }
   .resource-use-title, .inv-use-title { gap: 6px; }
 }
+
+/* --- Update banner --- */
+.update-banner {
+  position: fixed;
+  z-index: 90;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 11px 13px;
+  border: 1px solid rgba(69, 214, 198, .35);
+  border-radius: 10px;
+  background: linear-gradient(160deg, rgba(13, 25, 31, .97), rgba(7, 13, 17, .98));
+  box-shadow: 0 14px 40px rgba(0, 0, 0, .5), 0 0 0 1px rgba(69, 214, 198, .06);
+}
+.update-banner[hidden] { display: none; }
+.update-banner-body { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.update-banner-icon { width: 26px; height: 26px; flex: none; display: grid; place-items: center; border: 1px solid rgba(69, 214, 198, .3); border-radius: 7px; background: var(--accent-dim); color: var(--accent); }
+.update-banner-icon .icon { width: 13px; height: 13px; }
+.update-banner-copy { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.update-banner-copy b { color: var(--text); font-size: 11.5px; font-weight: 600; }
+.update-banner-copy > span { color: var(--text-2); font-size: 9.5px; line-height: 1.45; }
+.update-banner-notes { display: block; max-width: 420px; overflow: hidden; color: var(--text-3); text-overflow: ellipsis; white-space: nowrap; }
+.update-banner-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
+.update-banner-actions .btn-xs { height: 26px; padding: 0 8px; font-size: 8.5px; }
+@media (max-width: 620px) {
+  .update-banner { left: 10px; right: 10px; bottom: 10px; }
+  .update-banner-actions { flex: 1 1 100%; justify-content: flex-end; }
+}

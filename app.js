@@ -174,7 +174,9 @@
   const STORAGE_KEY = 'wikeloTracker.state.v1';
   const UI_KEY = 'wikeloTracker.ui.v1';
   const APP_ID = 'wikelo-tracker';
-  const APP_VERSION = 2;
+  const APP_VERSION = 3;
+  const UPDATE_MANIFEST_URL = 'https://raw.githubusercontent.com/PROtoKOPs/craft-tracker/main/version.json';
+  const UPDATE_DISMISS_KEY = 'wikeloTracker.updateDismissed.v1';
   const TOTAL_CONTRACTS = CONTRACTS.length;
 
   const ICON_PATHS = {
@@ -5563,8 +5565,9 @@
           <li>Прогресс сохраняется автоматически в этом браузере. Закрытие страницы его не сбрасывает.</li>
           <li>Для переноса или резервной копии используйте «Экспорт» и «Импорт».</li>
         </ul>
-        <div class="modal-hint"><strong>Горячие клавиши.</strong> «/» — перейти к поиску, «Esc» — закрыть окно, чек-лист или меню.</div>`,
+        <div class="modal-hint"><strong>Горячие клавиши.</strong> «/» — перейти к поиску, «Esc» — закрыть окно, чек-лист или меню. Текущая версия приложения: <b>v${APP_VERSION}</b>. Кнопка «Проверить обновления» сверяет версию с репозиторием на GitHub.</div>`,
       actions: `
+        <button class="btn btn-quiet" type="button" data-action="check-updates">${svgIcon('refresh')} Проверить обновления</button>
         <button class="btn btn-quiet" type="button" data-action="open-reset">${svgIcon('trash')} Сбросить прогресс</button>
         <button class="btn btn-outline" type="button" data-action="close-modal">Закрыть</button>
         <button class="btn btn-primary" type="button" data-action="export-json">${svgIcon('download')} Экспорт JSON</button>`
@@ -6013,6 +6016,15 @@
       case 'reset-custom-image':
         resetCustomImage();
         break;
+      case 'check-updates':
+        checkForUpdates(true);
+        break;
+      case 'hide-update-banner':
+        hideUpdateBanner();
+        break;
+      case 'dismiss-update-banner':
+        dismissUpdateBanner(node.dataset.version);
+        break;
       case 'open-loot':
         openLootDrawer(node.dataset.id || node.closest('[data-loot-id]')?.dataset.lootId);
         break;
@@ -6309,6 +6321,80 @@
     }
   }
 
+  // --- Проверка обновлений ------------------------------------------------
+
+  function updateBannerNode() {
+    let node = document.getElementById('update-banner');
+    if (!node) {
+      node = document.createElement('div');
+      node.id = 'update-banner';
+      node.className = 'update-banner';
+      node.setAttribute('role', 'status');
+      node.hidden = true;
+      document.body.appendChild(node);
+    }
+    return node;
+  }
+
+  function showUpdateBanner(info) {
+    const version = String(info && info.version != null ? info.version : '').trim();
+    if (!version) return;
+    let dismissed = '';
+    try { dismissed = localStorage.getItem(UPDATE_DISMISS_KEY) || ''; } catch (error) { /* storage unavailable */ }
+    if (dismissed === version) return;
+    const node = updateBannerNode();
+    const url = typeof info.url === 'string' ? info.url : UPDATE_MANIFEST_URL.replace('/version.json', '');
+    const title = typeof info.name === 'string' && info.name ? info.name : `Версия ${version}`;
+    const notes = typeof info.notes === 'string' && info.notes ? `<span class="update-banner-notes">${esc(info.notes)}</span>` : '';
+    node.innerHTML = `
+      <div class="update-banner-body">
+        <span class="update-banner-icon">${svgIcon('download')}</span>
+        <div class="update-banner-copy">
+          <b>Доступна новая версия</b>
+          <span>${esc(title)}${notes}</span>
+        </div>
+      </div>
+      <div class="update-banner-actions">
+        <a class="btn btn-primary btn-xs" href="${esc(url)}" target="_blank" rel="noopener">Обновить</a>
+        <button class="btn btn-quiet btn-xs" type="button" data-action="hide-update-banner">Позже</button>
+        <button class="btn btn-quiet btn-xs" type="button" data-action="dismiss-update-banner" data-version="${esc(version)}">Скрыть</button>
+      </div>`;
+    node.hidden = false;
+  }
+
+  function hideUpdateBanner() {
+    const node = document.getElementById('update-banner');
+    if (node) node.hidden = true;
+  }
+
+  function dismissUpdateBanner(version) {
+    if (!version) return;
+    try { localStorage.setItem(UPDATE_DISMISS_KEY, String(version)); } catch (error) { /* storage unavailable */ }
+    hideUpdateBanner();
+  }
+
+  async function checkForUpdates(manual = false) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), manual ? 10000 : 6000);
+    try {
+      const response = await fetch(`${UPDATE_MANIFEST_URL}?v=${Date.now()}`, { method: 'GET', cache: 'no-store', signal: controller.signal });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      const remote = Number(data && data.version);
+      if (!Number.isFinite(remote)) throw new Error('bad manifest');
+      if (remote > Number(APP_VERSION)) showUpdateBanner(data);
+      else if (manual) toast(`У вас последняя версия (v${APP_VERSION}).`, 'success');
+    } catch (error) {
+      if (error?.name === 'AbortError') {
+        if (manual) toast('Не удалось проверить обновления: нет ответа от GitHub.', 'error');
+        return;
+      }
+      if (manual) toast('Не удалось проверить обновления. Проверьте интернет и откройте страницу репозитория.', 'error');
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
   // --- Запуск -------------------------------------------------------------
 
   function init() {
@@ -6325,6 +6411,9 @@
     renderAll();
     document.body.classList.add('boot');
     setTimeout(() => document.body.classList.remove('boot'), 1200);
+    setTimeout(() => {
+      if (navigator.onLine !== false) checkForUpdates(false);
+    }, 2500);
   }
 
   init();
