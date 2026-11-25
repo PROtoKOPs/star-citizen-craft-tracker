@@ -4754,3 +4754,105 @@ button.inv-qty-cell:hover { border-color: rgba(224, 164, 90, .4); background: va
   .loot-art-icon .icon { width: 22px; height: 22px; }
   .loot-art-system { left: 74px; }
 }
+
+/* ==========================================================================
+   Consistency pass — one card language, readable meta, calmer loot
+   ========================================================================== */
+
+/* Loot: type is content, risk is the only semantic color. */
+[class*="loot-type--"] { --loot: var(--text-3); }
+.loot-card .badge--rep { color: var(--text-3); }
+.loot-card-flags { gap: 8px; align-items: baseline; }
+.loot-card .loot-card-summary { min-height: 56px; font-size: 12px; line-height: 1.55; }
+
+/* Resource meta should not disappear below the readable floor. */
+.resource-card-craft { min-height: 0; font-size: 11px; }
+.resource-card-craft .icon { width: 14px; height: 14px; }
+
+/* Inventory cards use the same footer language as every other card. */
+.inv-needs, .inv-needs b, .inv-card small { font-size: 11px; }
+.inv-card-foot { align-items: center; }
+.inv-card-foot .card-open { margin-right: auto; }
+.inv-card-foot .card-open .icon { width: 16px; height: 16px; }
+.inv-card-foot .btn { flex: 0 0 auto; }
+
+/* Requirement actions: one secondary control style, one quiet withdraw. */
+.req-actions {
+  margin-left: 64px;
+  padding-top: 8px;
+  gap: 8px 12px;
+  border-top: 1px solid var(--border);
+}
+.req-stock, .req-deposited, .req-withdraw { font-size: 11px; }
+.req-stock .icon { width: 16px; height: 16px; }
+.req-withdraw { text-decoration: none; }
+.req-actions .req-deposit {
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+}
+.req-actions .req-deposit:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+/* Resource modal meta reads as a list, not a run-on line. */
+.resource-detail-badges .badge + .badge::before {
+  content: "·";
+  margin-right: 8px;
+  color: var(--text-3);
+}
+
+.fab-fav-count { font-size: 11px; }
+
+/* Drawer and mission meta must match the readable body scale. */
+.drawer .progress-meta,
+.drawer .progress-meta span { font-size: 11px; }
+.req-lots .q-chip,
+.fab-total-lots .q-chip {
+  min-height: 28px;
+  padding: 4px 8px 7px;
+  font-size: 11px;
+}
+.foot-label { font-size: 11px; }
+.foot-actions .btn { height: 34px; padding: 0 12px; font-size: 12px; }
+.foot-actions .btn .icon { width: 16px; height: 16px; }
+.fab-mission-meta .badge { font-size: 11px; }
+.qf-mod-value small { font-size: 11px; }
+.info-cell dd.mono { font-size: 11px; }
+
+@media (max-width: 680px) {
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2px;
+    width: 100%;
+    overflow: visible;
+  }
+  .tab {
+    width: 100%;
+    justify-content: center;
+    padding: 0 8px;
+  }
+  .req-actions { margin-left: 0; }
+  .req-check { width: 28px; height: 28px; }
+  .step-btn { width: 32px; height: 32px; }
+  .foot-actions .btn { padding: 0 12px; font-size: 12px; }
+  .foot-actions .btn .btn-text-long { display: inline; }
+}
+
+@media (max-width: 430px) {
+  .stat {
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    padding: 4px 2px;
+  }
+  .stat span {
+    display: block;
+    font-size: 11px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+}

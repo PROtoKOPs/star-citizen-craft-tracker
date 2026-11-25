@@ -174,7 +174,7 @@
   const STORAGE_KEY = 'wikeloTracker.state.v1';
   const UI_KEY = 'wikeloTracker.ui.v1';
   const APP_ID = 'wikelo-tracker';
-  const APP_VERSION = 4;
+  const APP_VERSION = '4.0.1';
   const UPDATE_MANIFEST_URL = 'https://raw.githubusercontent.com/PROtoKOPs/star-citizen-craft-tracker/main/version.json';
   const UPDATE_RELEASE_URL = 'https://github.com/PROtoKOPs/star-citizen-craft-tracker/releases/latest';
   const UPDATE_DISMISS_KEY = 'wikeloTracker.updateDismissed.v1';
@@ -2540,7 +2540,7 @@
   function inventoryContractUsageRow(row) {
     const capacity = Math.min(contractDepositCapacity(row.order, row.stockLots), row.remaining);
     const actions = [
-      capacity > 0 ? `${qualitySelectHtml(row.name, { includeAll: true, label: 'Партия' })}<button class="btn btn-primary btn-xs" type="button" data-action="deposit-inventory-contract" data-resource="${esc(row.name)}" data-contract-id="${esc(row.contract.id)}">Внести</button>` : '',
+      capacity > 0 ? `${qualitySelectHtml(row.name, { includeAll: true, label: 'Партия' })}<button class="btn btn-outline btn-xs" type="button" data-action="deposit-inventory-contract" data-resource="${esc(row.name)}" data-contract-id="${esc(row.contract.id)}">Внести</button>` : '',
       row.deposited > 0 ? `<button class="btn btn-quiet btn-xs" type="button" data-action="withdraw-contract-deposit" data-resource="${esc(row.name)}" data-contract-id="${esc(row.contract.id)}">Вернуть ${contractDepositLabel(row.deposited, row.order)} · Q${fmt(row.quality)}</button>` : ''
     ].join('');
     return `<div class="inv-use-row" data-deposit-scope>
@@ -2558,7 +2558,7 @@
     const top = [...row.stockLots].sort((a, b) => b.q - a.q)[0];
     const amount = top ? Math.min(top.n, row.remaining) : 0;
     const actions = [
-      amount > 0 ? `${qualitySelectHtml(row.name, { label: 'Партия' })}<button class="btn btn-primary btn-xs" type="button" data-action="deposit-inventory-blueprint" data-resource="${esc(row.name)}" data-bp-id="${esc(row.bp.id)}" data-key="${esc(row.key)}">Внести</button>` : '',
+      amount > 0 ? `${qualitySelectHtml(row.name, { label: 'Партия' })}<button class="btn btn-outline btn-xs" type="button" data-action="deposit-inventory-blueprint" data-resource="${esc(row.name)}" data-bp-id="${esc(row.bp.id)}" data-key="${esc(row.key)}">Внести</button>` : '',
       row.deposited > 0 ? `<button class="btn btn-quiet btn-xs" type="button" data-action="withdraw-blueprint-deposit" data-bp-id="${esc(row.bp.id)}" data-key="${esc(row.key)}">Вернуть ${fmt(row.deposited)} ед. · Q${fmt(row.quality)}</button>` : ''
     ].join('');
     return `<div class="inv-use-row inv-use-row--bp" data-deposit-scope>
@@ -2944,7 +2944,7 @@
             : row.totalUsage > 0 ? 'Нет активной потребности' : stock > 0 ? 'Сейчас не требуется' : 'Не используется'}</span>
         </div>
         <div class="inv-card-foot">
-          <button class="btn btn-outline btn-xs" type="button" data-action="open-inventory-resource" data-resource="${esc(profile.name)}">Где нужен ${svgIcon('arrowRight')}</button>
+          <button class="card-open" type="button" data-action="open-inventory-resource" data-resource="${esc(profile.name)}">Где нужен ${svgIcon('arrowRight')}</button>
           ${quickAction}
         </div>
       </div>
@@ -3098,7 +3098,7 @@
       <div class="sidebar-card sidebar-card--wide">
         <div class="search-box">
           ${svgIcon('search')}
-          <input id="contract-search" type="search" data-role="contract-search" value="${esc(ui.contractSearch)}" placeholder="Контракт, награда, ресурс" aria-label="Поиск контрактов">
+          <input id="contract-search" type="search" data-role="contract-search" value="${esc(ui.contractSearch)}" placeholder="Контракт или награда" aria-label="Поиск контрактов">
           <span class="search-hint">/</span>
         </div>
       </div>
@@ -3167,7 +3167,7 @@
       <div class="sidebar-card sidebar-card--wide">
         <div class="search-box">
           ${svgIcon('search')}
-          <input id="resource-search" type="search" data-role="resource-search" value="${esc(ui.resourceSearch)}" placeholder="Ресурс, контракт или чертёж" aria-label="Поиск ресурсов по контрактам и крафтам">
+          <input id="resource-search" type="search" data-role="resource-search" value="${esc(ui.resourceSearch)}" placeholder="Ресурс или чертёж" aria-label="Поиск ресурсов по контрактам и крафтам">
           <span class="search-hint">/</span>
         </div>
       </div>
@@ -3413,7 +3413,7 @@
           ${row.stockLots.length ? `<div class="fab-total-lots">${qualityLotsChips(row.stockLots)}</div>` : ''}
           ${row.deposited > 0 ? `<span class="fab-total-progress">Внесено ${fmt(row.deposited)} ед. · Q${fmt(row.quality)}${row.remaining > 0 ? ` из ${fmt(row.required)}` : ''}</span>` : ''}
           <div class="fab-total-actions">
-            ${amount > 0 ? `${qualitySelectHtml(row.name, { label: 'Партия' })}<button class="btn btn-primary btn-xs" type="button" data-action="deposit-inventory-blueprint" data-resource="${esc(row.name)}" data-bp-id="${esc(bp.id)}" data-key="${esc(row.key)}">Внести</button>` : ''}
+            ${amount > 0 ? `${qualitySelectHtml(row.name, { label: 'Партия' })}<button class="btn btn-outline btn-xs" type="button" data-action="deposit-inventory-blueprint" data-resource="${esc(row.name)}" data-bp-id="${esc(bp.id)}" data-key="${esc(row.key)}">Внести</button>` : ''}
             ${row.deposited > 0 ? `<button class="btn btn-quiet btn-xs" type="button" data-action="withdraw-blueprint-deposit" data-bp-id="${esc(bp.id)}" data-key="${esc(row.key)}">Вернуть ${fmt(row.deposited)} ед. · Q${fmt(row.quality)}</button>` : ''}
           </div>
         </div>
@@ -3840,7 +3840,7 @@
     const searchCard = `<div class="sidebar-card sidebar-card--wide">
       <div class="search-box">
         ${svgIcon('search')}
-        <input id="fabricator-search" type="search" data-role="fabricator-search" value="${esc(ui.fabricatorSearch)}" placeholder="${ui.fabricatorMode === 'materials' ? 'Материал или чертёж' : 'Чертёж, материал, миссия'}" aria-label="Поиск по фабрикатору">
+        <input id="fabricator-search" type="search" data-role="fabricator-search" value="${esc(ui.fabricatorSearch)}" placeholder="${ui.fabricatorMode === 'materials' ? 'Материал или чертёж' : 'Чертёж или материал'}" aria-label="Поиск по фабрикатору">
         <span class="search-hint">/</span>
       </div>
     </div>`;
@@ -3981,7 +3981,7 @@
       <div class="sidebar-card sidebar-card--wide">
         <div class="search-box">
           ${svgIcon('search')}
-          <input id="loot-search" type="search" data-role="loot-search" value="${esc(ui.lootSearch)}" placeholder="Локация, лут, система" aria-label="Поиск мест для лута">
+          <input id="loot-search" type="search" data-role="loot-search" value="${esc(ui.lootSearch)}" placeholder="Локация или лут" aria-label="Поиск мест для лута">
           <span class="search-hint">/</span>
         </div>
       </div>
@@ -4503,8 +4503,8 @@
     return `<div class="req-actions" data-req-actions data-deposit-scope>
       <span class="req-stock${stock > 0 ? ' has-stock' : ''}" title="${stock > 0 ? 'Доступно на личном складе' : 'Пополните склад во вкладке «Мои ресурсы»'}">${svgIcon('box')} ${stock > 0 ? `В инвентаре: <b>${fmt(stock)}</b> ед.` : 'Нет в инвентаре'}</span>
       ${stock > 0 ? `<span class="req-lots">${qualityLotsChips(lots)}</span>` : ''}
-      ${capacity > 0 ? `${qualitySelectHtml(order.name, { includeAll: true })}<button class="req-deposit" type="button" data-action="deposit-inventory-contract" data-resource="${esc(order.name)}" data-contract-id="${esc(contract.id)}">Внести</button>` : ''}
-      ${deposited > 0 ? `<span class="req-deposited">Из склада: ${contractDepositLabel(deposited, order)} · Q${fmt(quality)}</span><button class="req-withdraw" type="button" data-action="withdraw-contract-deposit" data-resource="${esc(order.name)}" data-contract-id="${esc(contract.id)}">Вернуть</button>` : ''}
+      ${capacity > 0 ? `${qualitySelectHtml(order.name, { includeAll: true })}<button class="btn btn-outline btn-xs req-deposit" type="button" data-action="deposit-inventory-contract" data-resource="${esc(order.name)}" data-contract-id="${esc(contract.id)}">Внести</button>` : ''}
+      ${deposited > 0 ? `<span class="req-deposited">Из склада: ${contractDepositLabel(deposited, order)} · Q${fmt(quality)}</span><button class="btn btn-quiet btn-xs req-withdraw" type="button" data-action="withdraw-contract-deposit" data-resource="${esc(order.name)}" data-contract-id="${esc(contract.id)}">Вернуть</button>` : ''}
     </div>`;
   }
 
@@ -6377,6 +6377,24 @@
     hideUpdateBanner();
   }
 
+  function normalizeVersion(value) {
+    const raw = String(value ?? '').trim().replace(/^v/i, '');
+    return /^\d+(?:\.\d+)*$/.test(raw) ? raw : '';
+  }
+
+  function compareVersions(a, b) {
+    const left = normalizeVersion(a).split('.').map((part) => Number(part) || 0);
+    const right = normalizeVersion(b).split('.').map((part) => Number(part) || 0);
+    const length = Math.max(left.length, right.length);
+    for (let i = 0; i < length; i += 1) {
+      const x = left[i] || 0;
+      const y = right[i] || 0;
+      if (x > y) return 1;
+      if (x < y) return -1;
+    }
+    return 0;
+  }
+
   async function checkForUpdates(manual = false) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), manual ? 10000 : 6000);
@@ -6384,9 +6402,9 @@
       const response = await fetch(`${UPDATE_MANIFEST_URL}?v=${Date.now()}`, { method: 'GET', cache: 'no-store', signal: controller.signal });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
-      const remote = Number(data && data.version);
-      if (!Number.isFinite(remote)) throw new Error('bad manifest');
-      if (remote > Number(APP_VERSION)) showUpdateBanner(data, manual);
+      const remote = normalizeVersion(data && data.version);
+      if (!remote) throw new Error('bad manifest');
+      if (compareVersions(remote, APP_VERSION) > 0) showUpdateBanner(data, manual);
       else if (manual) toast(`У вас последняя версия (v${APP_VERSION}).`, 'success');
     } catch (error) {
       if (error?.name === 'AbortError') {
