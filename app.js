@@ -174,7 +174,7 @@
   const STORAGE_KEY = 'wikeloTracker.state.v1';
   const UI_KEY = 'wikeloTracker.ui.v1';
   const APP_ID = 'wikelo-tracker';
-  const APP_VERSION = 3;
+  const APP_VERSION = 4;
   const UPDATE_MANIFEST_URL = 'https://raw.githubusercontent.com/PROtoKOPs/star-citizen-craft-tracker/main/version.json';
   const UPDATE_RELEASE_URL = 'https://github.com/PROtoKOPs/star-citizen-craft-tracker/releases/latest';
   const UPDATE_DISMISS_KEY = 'wikeloTracker.updateDismissed.v1';
