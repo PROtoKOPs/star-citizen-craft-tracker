@@ -1519,7 +1519,8 @@
 
   function qualityChipHtml(quality, amount, unit = 'ед.') {
     const q = qualityValue(quality);
-    return `<span class="q-chip ${qualityTone(q)}"><b>Q${fmt(q)}</b>${Number.isFinite(Number(amount)) ? `<span>${fmt(amount)} ${esc(unit)}</span>` : ''}</span>`;
+    const ratio = (clamp(q, QUALITY_MIN, QUALITY_MAX) / QUALITY_MAX).toFixed(3);
+    return `<span class="q-chip ${qualityTone(q)}" style="--q-ratio:${ratio}"><b>Q${fmt(q)}</b>${Number.isFinite(Number(amount)) ? `<span>${fmt(amount)} ${esc(unit)}</span>` : ''}</span>`;
   }
 
   function qualityLotsChips(lots, options = {}) {
@@ -4053,7 +4054,7 @@
         <div class="card-visual-top">
           <span class="cat-badge" title="${esc(type.label)}">${svgIcon(type.icon)}</span>
           <div class="loot-card-flags">
-            ${location.top ? '<span class="badge badge--rep">ТОП</span>' : ''}
+            ${location.top ? '<span class="badge badge--rep">Топ</span>' : ''}
             <span class="badge loot-risk-badge risk--${esc(location.risk)}">${esc(risk.label)}</span>
           </div>
         </div>
